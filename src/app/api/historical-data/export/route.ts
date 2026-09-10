@@ -9,6 +9,10 @@ import {
   buildHistoricalDataPdf,
   getHistoricalData,
 } from "@/lib/historical-data";
+import {
+  isWithinHistoricalDateRange,
+  toHistoricalDateKey,
+} from "@/lib/historical-data.shared";
 import { DEFAULT_LOCALE, isSupportedLocale } from "@/locales/config";
 
 export const runtime = "nodejs";
@@ -51,13 +55,20 @@ export async function GET(request: Request) {
     );
   }
 
+  const fromKey = toHistoricalDateKey(searchParams.get("from") ?? "") || null;
+  const toKey = toHistoricalDateKey(searchParams.get("to") ?? "") || null;
+
   const allRecords = await getHistoricalData();
-  const records = category
-    ? allRecords.filter((record) => record.category === category)
-    : allRecords;
+  const records = allRecords.filter(
+    (record) =>
+      (!category || record.category === category) &&
+      isWithinHistoricalDateRange(record.tanggal, fromKey, toKey),
+  );
 
   const datePart = new Date().toISOString().slice(0, 10);
-  const filename = `historical-data-${slugifyFilenamePart(category ?? "all")}-${datePart}.${format}`;
+  const rangePart =
+    fromKey || toKey ? `-${fromKey ?? "start"}_${toKey ?? "end"}` : "";
+  const filename = `historical-data-${slugifyFilenamePart(category ?? "all")}${rangePart}-${datePart}.${format}`;
 
   if (format === "csv") {
     return withApiProtectionHeaders(

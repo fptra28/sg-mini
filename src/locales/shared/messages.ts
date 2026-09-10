@@ -459,6 +459,10 @@ export type AppMessages = {
     note: string;
     bankHoliday: string;
     noNote: string;
+    rangeLabel: string;
+    rangeFrom: string;
+    rangeTo: string;
+    rangeReset: string;
     previous: string;
     next: string;
     page: string;

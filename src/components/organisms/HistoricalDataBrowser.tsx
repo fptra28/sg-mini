@@ -2,6 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { EmptyStatePanel } from "@/components/molecules/EmptyStatePanel";
 import { HistoricalDataMetricCard } from "@/components/molecules/HistoricalDataMetricCard";
@@ -9,6 +10,10 @@ import { HistoricalDataRecordCard } from "@/components/molecules/HistoricalDataR
 import { PaginationControls } from "@/components/molecules/PaginationControls";
 import { ScrollReveal } from "@/components/molecules/ScrollReveal";
 import { type HistoricalDataRecord } from "@/lib/historical-data";
+import {
+  isWithinHistoricalDateRange,
+  toHistoricalDateKey,
+} from "@/lib/historical-data.shared";
 import {
   formatLocaleNumber,
   getLocaleConfig,
@@ -130,7 +135,10 @@ export function HistoricalDataBrowser({
       : (categories[0] ?? ""),
   );
   const [currentPage, setCurrentPage] = useState(1);
+  const [rangeFrom, setRangeFrom] = useState("");
+  const [rangeTo, setRangeTo] = useState("");
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
+  const [isMobileFilterModalOpen, setIsMobileFilterModalOpen] = useState(false);
   const categoryMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -143,6 +151,7 @@ export function HistoricalDataBrowser({
     function handleEscape(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setIsCategoryMenuOpen(false);
+        setIsMobileFilterModalOpen(false);
       }
     }
 
@@ -173,8 +182,26 @@ export function HistoricalDataBrowser({
     }
   }, [categories, selectedCategory]);
 
+  const dateBounds = records.reduce(
+    (bounds, record) => {
+      const dateKey = toHistoricalDateKey(record.tanggal);
+
+      if (!dateKey) {
+        return bounds;
+      }
+
+      return {
+        min: !bounds.min || dateKey < bounds.min ? dateKey : bounds.min,
+        max: !bounds.max || dateKey > bounds.max ? dateKey : bounds.max,
+      };
+    },
+    { min: "", max: "" },
+  );
+
   const filteredRecords = records.filter(
-    (record) => record.category === selectedCategory,
+    (record) =>
+      record.category === selectedCategory &&
+      isWithinHistoricalDateRange(record.tanggal, rangeFrom, rangeTo),
   );
   const totalPages = Math.max(1, Math.ceil(filteredRecords.length / PAGE_SIZE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
@@ -183,7 +210,8 @@ export function HistoricalDataBrowser({
     startIndex,
     startIndex + PAGE_SIZE,
   );
-  const latestDate = records[0]?.tanggal;
+  const latestDate = filteredRecords[0]?.tanggal;
+  const isRangeActive = Boolean(rangeFrom || rangeTo);
   const metricCards: HistoricalDataMetricCardItem[] = [
     {
       label: labels.records,
@@ -206,6 +234,40 @@ export function HistoricalDataBrowser({
     setIsCategoryMenuOpen(false);
   };
 
+  const handleRangeFromChange = (value: string) => {
+    setRangeFrom(value);
+    setCurrentPage(1);
+  };
+
+  const handleRangeToChange = (value: string) => {
+    setRangeTo(value);
+    setCurrentPage(1);
+  };
+
+  const handleRangeReset = () => {
+    setRangeFrom("");
+    setRangeTo("");
+    setCurrentPage(1);
+  };
+
+  const buildExportHref = (format: "csv" | "pdf") => {
+    const exportParams = new URLSearchParams({
+      category: selectedCategory,
+      format,
+      locale,
+    });
+
+    if (rangeFrom) {
+      exportParams.set("from", rangeFrom);
+    }
+
+    if (rangeTo) {
+      exportParams.set("to", rangeTo);
+    }
+
+    return `/api/historical-data/export?${exportParams.toString()}`;
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid gap-3 sm:grid-cols-3">
@@ -225,70 +287,123 @@ export function HistoricalDataBrowser({
 
       <ScrollReveal effect="fade-up" className="relative z-40">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="relative" ref={categoryMenuRef}>
-            <button
-              type="button"
-              onClick={() =>
-                setIsCategoryMenuOpen((currentValue) => !currentValue)
-              }
-              className="flex min-w-[180px] items-center justify-between gap-3 rounded-full border border-yellow-500/60 bg-yellow-500/10 px-4 py-2 text-sm font-medium text-yellow-500 transition hover:bg-yellow-500/20"
-              aria-haspopup="listbox"
-              aria-expanded={isCategoryMenuOpen}
-              aria-label={labels.category}
-            >
-              <span className="min-w-0 truncate">
-                {selectedCategory || labels.category}
-              </span>
-              <svg
-                width="12"
-                height="8"
-                viewBox="0 0 12 8"
-                fill="none"
-                className={
-                  isCategoryMenuOpen
-                    ? "shrink-0 rotate-180 transition-transform duration-200"
-                    : "shrink-0 transition-transform duration-200"
-                }
-              >
-                <path
-                  d="M1.5 1.5L6 6L10.5 1.5"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+          <button
+            type="button"
+            onClick={() => setIsMobileFilterModalOpen(true)}
+            className="inline-flex items-center gap-2 rounded-full border border-yellow-500/60 bg-yellow-500/10 px-4 py-2 text-sm font-medium text-yellow-500 transition hover:bg-yellow-500/20 md:hidden"
+            aria-haspopup="dialog"
+            aria-expanded={isMobileFilterModalOpen}
+          >
+            <FontAwesomeIcon icon={["fas", "sliders"]} className="text-xs" />
+            {labels.category}
+            {isRangeActive ? (
+              <span className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
+            ) : null}
+          </button>
 
-            {isCategoryMenuOpen ? (
-              <div
-                className={`absolute left-0 top-[calc(100%+0.5rem)] z-30 w-56 rounded-xl border border-line bg-neutral-950 shadow-[0_18px_40px_rgba(0,0,0,0.38)] ${CATEGORY_MENU_SCROLL_AREA_CLASSNAME}`}
-                role="listbox"
+          <div className="hidden items-center gap-4 md:flex">
+            <div className="relative" ref={categoryMenuRef}>
+              <button
+                type="button"
+                onClick={() =>
+                  setIsCategoryMenuOpen((currentValue) => !currentValue)
+                }
+                className="flex min-w-[180px] items-center justify-between gap-3 rounded-full bg-yellow-500/10 px-4 py-2 text-sm font-medium text-yellow-500 transition hover:bg-yellow-500/20"
+                aria-haspopup="listbox"
+                aria-expanded={isCategoryMenuOpen}
                 aria-label={labels.category}
               >
-                {categories.map((category) => {
-                  const isSelected = category === selectedCategory;
+                <span className="min-w-0 truncate">
+                  {selectedCategory || labels.category}
+                </span>
+                <svg
+                  width="12"
+                  height="8"
+                  viewBox="0 0 12 8"
+                  fill="none"
+                  className={
+                    isCategoryMenuOpen
+                      ? "shrink-0 rotate-180 transition-transform duration-200"
+                      : "shrink-0 transition-transform duration-200"
+                  }
+                >
+                  <path
+                    d="M1.5 1.5L6 6L10.5 1.5"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
 
-                  return (
-                    <button
-                      key={category}
-                      type="button"
-                      onClick={() => handleCategoryChange(category)}
-                      className={
-                        isSelected
-                          ? "flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-yellow-400"
-                          : "flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-foreground/82 transition hover:bg-white/5"
-                      }
-                      role="option"
-                      aria-selected={isSelected}
-                    >
-                      <span className="min-w-0 truncate">{category}</span>
-                      {isSelected ? (
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-500/80" />
-                      ) : null}
-                    </button>
-                  );
-                })}
+              {isCategoryMenuOpen ? (
+                <div
+                  className={`absolute left-0 top-[calc(100%+0.5rem)] z-30 w-56 rounded-xl bg-neutral-950 shadow-[0_18px_40px_rgba(0,0,0,0.38)] ${CATEGORY_MENU_SCROLL_AREA_CLASSNAME}`}
+                  role="listbox"
+                  aria-label={labels.category}
+                >
+                  {categories.map((category) => {
+                    const isSelected = category === selectedCategory;
+
+                    return (
+                      <button
+                        key={category}
+                        type="button"
+                        onClick={() => handleCategoryChange(category)}
+                        className={
+                          isSelected
+                            ? "flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-yellow-400"
+                            : "flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-foreground/82 transition hover:bg-white/5"
+                        }
+                        role="option"
+                        aria-selected={isSelected}
+                      >
+                        <span className="min-w-0 truncate">{category}</span>
+                        {isSelected ? (
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-500/80" />
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+
+            {records.length > 0 ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <input
+                  type="date"
+                  value={rangeFrom}
+                  min={dateBounds.min || undefined}
+                  max={rangeTo || dateBounds.max || undefined}
+                  onChange={(event) => handleRangeFromChange(event.target.value)}
+                  aria-label={`${labels.rangeLabel} — ${labels.rangeFrom}`}
+                  className="rounded-full border border-line bg-white/5 px-4 py-2 text-sm text-foreground/88 outline-none transition scheme-dark focus:border-yellow-500/60"
+                />
+
+                <span className="text-yellow-500/50">to</span>
+
+                <input
+                  type="date"
+                  value={rangeTo}
+                  min={rangeFrom || dateBounds.min || undefined}
+                  max={dateBounds.max || undefined}
+                  onChange={(event) => handleRangeToChange(event.target.value)}
+                  aria-label={`${labels.rangeLabel} — ${labels.rangeTo}`}
+                  className="rounded-full border border-line bg-white/5 px-4 py-2 text-sm text-foreground/88 outline-none transition scheme-dark focus:border-yellow-500/60"
+                />
+
+                {isRangeActive ? (
+                  <button
+                    type="button"
+                    onClick={handleRangeReset}
+                    className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-xs font-medium text-foreground/72 transition hover:border-yellow-500/60 hover:text-yellow-400"
+                  >
+                    <FontAwesomeIcon icon={["fas", "xmark"]} className="text-xs" />
+                    {labels.rangeReset}
+                  </button>
+                ) : null}
               </div>
             ) : null}
           </div>
@@ -296,7 +411,7 @@ export function HistoricalDataBrowser({
           {selectedCategory ? (
             <div className="flex flex-wrap items-center gap-2">
               <a
-                href={`/api/historical-data/export?category=${encodeURIComponent(selectedCategory)}&format=csv&locale=${locale}`}
+                href={buildExportHref("csv")}
                 className="inline-flex items-center gap-2 rounded-full border border-yellow-500/60 bg-yellow-500/10 px-3 py-1.5 text-xs font-medium text-yellow-500 transition hover:bg-yellow-500/20"
               >
                 <FontAwesomeIcon icon={["fas", "file-csv"]} className="text-xs" />
@@ -304,7 +419,7 @@ export function HistoricalDataBrowser({
               </a>
 
               <a
-                href={`/api/historical-data/export?category=${encodeURIComponent(selectedCategory)}&format=pdf&locale=${locale}`}
+                href={buildExportHref("pdf")}
                 className="inline-flex items-center gap-2 rounded-full border border-yellow-500/60 bg-yellow-500/10 px-3 py-1.5 text-xs font-medium text-yellow-500 transition hover:bg-yellow-500/20"
               >
                 <FontAwesomeIcon icon={["fas", "file-pdf"]} className="text-xs" />
@@ -314,6 +429,112 @@ export function HistoricalDataBrowser({
           ) : null}
         </div>
       </ScrollReveal>
+
+      {isMobileFilterModalOpen && typeof document !== "undefined"
+        ? createPortal(
+          <div
+            className="fixed inset-0 z-[150] flex items-center bg-black/60 p-4 backdrop-blur-md md:hidden"
+            onClick={() => setIsMobileFilterModalOpen(false)}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="historical-data-filter-title"
+              className="max-h-[85vh] w-full overflow-y-auto rounded-3xl border border-white/10 bg-[#090909]/95 p-5 shadow-[0_30px_80px_rgba(0,0,0,0.7)]"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <h3 id="historical-data-filter-title" className="text-lg font-semibold text-white">
+                  {labels.category}
+                </h3>
+                <button
+                  type="button"
+                  aria-label={labels.close}
+                  onClick={() => setIsMobileFilterModalOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-400 transition hover:bg-white/5 hover:text-white"
+                >
+                  <FontAwesomeIcon icon={["fas", "xmark"]} />
+                </button>
+              </div>
+
+              <div className="mt-5">
+                <p className="text-sm font-medium text-foreground/80">{labels.category}</p>
+                <div className={`mt-3 rounded-xl bg-white/[0.03] ${CATEGORY_MENU_SCROLL_AREA_CLASSNAME}`} role="listbox" aria-label={labels.category}>
+                  {categories.map((category) => {
+                    const isSelected = category === selectedCategory;
+
+                    return (
+                      <button
+                        key={category}
+                        type="button"
+                        onClick={() => handleCategoryChange(category)}
+                        className={
+                          isSelected
+                            ? "flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm text-yellow-400"
+                            : "flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm text-foreground/82 transition hover:bg-white/5"
+                        }
+                        role="option"
+                        aria-selected={isSelected}
+                      >
+                        <span className="min-w-0 truncate">{category}</span>
+                        {isSelected ? <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-500/80" /> : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {records.length > 0 ? (
+                <div className="mt-6 border-t border-white/10 pt-5">
+                  <p className="text-sm font-medium text-foreground/80">{labels.rangeLabel}</p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <label className="space-y-2 text-sm text-foreground/72">
+                      <span>{labels.rangeFrom}</span>
+                      <input
+                        type="date"
+                        value={rangeFrom}
+                        min={dateBounds.min || undefined}
+                        max={rangeTo || dateBounds.max || undefined}
+                        onChange={(event) => handleRangeFromChange(event.target.value)}
+                        className="w-full rounded-xl border border-line bg-white/5 px-4 py-3 text-sm text-foreground/88 outline-none transition scheme-dark focus:border-yellow-500/60"
+                      />
+                    </label>
+                    <label className="space-y-2 text-sm text-foreground/72">
+                      <span>{labels.rangeTo}</span>
+                      <input
+                        type="date"
+                        value={rangeTo}
+                        min={rangeFrom || dateBounds.min || undefined}
+                        max={dateBounds.max || undefined}
+                        onChange={(event) => handleRangeToChange(event.target.value)}
+                        className="w-full rounded-xl border border-line bg-white/5 px-4 py-3 text-sm text-foreground/88 outline-none transition scheme-dark focus:border-yellow-500/60"
+                      />
+                    </label>
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="mt-6 grid grid-cols-2 gap-3 border-t border-white/10 pt-5">
+                <button
+                  type="button"
+                  onClick={handleRangeReset}
+                  className="rounded-xl border border-white/10 py-3 text-sm font-medium text-foreground/80 transition hover:bg-white/5"
+                >
+                  {labels.rangeReset}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsMobileFilterModalOpen(false)}
+                  className="rounded-xl bg-yellow-500 py-3 text-sm font-semibold text-black transition hover:bg-yellow-400"
+                >
+                  {labels.close}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )
+        : null}
 
       {visibleRecords.length === 0 ? (
         <EmptyStatePanel body={labels.empty} />
