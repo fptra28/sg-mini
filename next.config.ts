@@ -83,9 +83,13 @@ const allowedActionOrigins = Array.from(
 );
 const DEFAULT_LOCALE = "id";
 const deploymentId = process.env.DEPLOYMENT_VERSION?.trim() || undefined;
+const isVercelDeployment = process.env.VERCEL === "1";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Vercel packages Next.js deployments itself. Keeping standalone for other
+  // environments avoids a Next.js 16.3 adapter regression on Vercel that
+  // omits .next/next-server.js.nft.json during the packaging step.
+  output: isVercelDeployment ? undefined : "standalone",
   deploymentId,
   async redirects() {
     return [
