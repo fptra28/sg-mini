@@ -36,6 +36,10 @@ function resolveActiveTab(pathname: string): TabId {
     return "transaction";
   }
 
+  if (pathname.includes("/client-area/trade-pilot")) {
+    return "trade-pilot";
+  }
+
   if (pathname.includes("/client-area/news")) {
     return "news";
   }
@@ -130,7 +134,7 @@ export function ClientAreaAdminFrame({
           >
             <ArrowLeft className="h-[18px] w-[18px] hover:bg-amber-500/10 hover:text-amber-300" />
             <span className="text-sm font-medium leading-tight">
-              {locale === "id" ? "Kembali ke Website" : "Back to Website"}
+              {locale === "id" ? "Website Utama" : "Main Website"}
             </span>
           </a>
         </div>

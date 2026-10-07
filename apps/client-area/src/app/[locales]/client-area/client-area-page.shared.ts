@@ -22,6 +22,11 @@ export type ClientAreaSubpageProps = {
   params: Promise<{ locales: string }>;
 };
 
+export type ClientAreaTradePilotRoute =
+  | "analisis"
+  | "riwayat-performa"
+  | "panduan";
+
 export function assertValidLocale(value: string): asserts value is AppLocale {
   if (!isSupportedLocale(value)) {
     notFound();
@@ -74,5 +79,26 @@ export function buildClientAreaSubpageMetadata(
     description: `${sectionTitle}. ${clientArea.pageDescription}`,
     locale,
     path,
+  });
+}
+
+export function buildClientAreaTradePilotMetadata(
+  locale: AppLocale,
+  route: ClientAreaTradePilotRoute,
+): Metadata {
+  const { clientArea } = getMessages(locale);
+  const routeCopy =
+    route === "analisis"
+      ? clientArea.tradePilotPage.analysis
+      : route === "riwayat-performa"
+        ? clientArea.tradePilotPage.performanceHistory
+        : clientArea.tradePilotPage.guide;
+  const clientAreaLabel = getClientAreaSeoLabel(locale);
+
+  return buildPrivateMetadata({
+    title: `${routeCopy.title} | Trade Pilot | ${clientAreaLabel}`,
+    description: routeCopy.description,
+    locale,
+    path: `/${locale}/client-area/trade-pilot/${route}`,
   });
 }

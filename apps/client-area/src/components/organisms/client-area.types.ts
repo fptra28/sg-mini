@@ -3,6 +3,7 @@ import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 export type TabId =
   | "home"
   | "market"
+  | "trade-pilot"
   | "transaction"
   | "news"
   | "ebook"

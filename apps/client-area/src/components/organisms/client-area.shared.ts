@@ -11,6 +11,7 @@ import type { NewsFeedArticle } from "@/lib/news.shared";
 import {
   House,
   ChartNoAxesCombined,
+  Rocket,
   Wallet,
   Newspaper,
   BookOpen,
@@ -94,6 +95,7 @@ const EMPTY_ACCOUNT_SNAPSHOT: AccountSnapshot = {
 export const TABS: TabId[] = [
   "home",
   "market",
+  "trade-pilot",
   "transaction",
   "news",
   "account",
@@ -121,6 +123,10 @@ export function resolveLocalizedHref(locale: AppLocale, href = "/") {
 export function resolveClientAreaTabHref(locale: AppLocale, tab: TabId) {
   if (tab === "home") {
     return resolveLocalizedHref(locale, "/client-area");
+  }
+
+  if (tab === "trade-pilot") {
+    return resolveLocalizedHref(locale, "/client-area/trade-pilot/analisis");
   }
 
   return resolveLocalizedHref(locale, `/client-area/${tab}`);
@@ -1838,6 +1844,7 @@ export function getSidebarIconMap(): Record<TabId, LucideIcon> {
   return {
     home: House,
     market: ChartNoAxesCombined,
+    "trade-pilot": Rocket,
     transaction: Wallet,
     news: Newspaper,
     ebook: BookOpen,

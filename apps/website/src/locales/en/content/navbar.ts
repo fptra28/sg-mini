@@ -17,7 +17,10 @@ export const enNavbar: AppMessages["navbar"] = {
           href: "/produk/multilateral",
         },
         { label: "Bilateral", href: "/produk/bilateral" },
-        { label: "Regular Account", href: "/produk/reguler" },
+        {
+          label: "Reguler Account",
+          href: "https://reguler.sg-berjangka.com/",
+        },
         { label: "Prime Account", href: "/produk/prime" },
         { label: "Solid Gold App", href: "/aplikasi-solid-gold" },
         { label: "Live Quote", href: "/live-quote" },

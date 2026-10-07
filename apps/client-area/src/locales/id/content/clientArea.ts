@@ -65,8 +65,7 @@ export const idClientArea: AppMessages["clientArea"] = {
     errorRequired: "Masukkan kode OTP Anda.",
     errorInvalidCode:
       "Kode OTP tidak sesuai atau sudah kedaluwarsa. Silakan coba lagi.",
-    errorSessionExpired:
-      "Sesi verifikasi telah berakhir. Silakan login ulang.",
+    errorSessionExpired: "Sesi verifikasi telah berakhir. Silakan login ulang.",
   },
   user: {
     name: "Anita",
@@ -90,6 +89,11 @@ export const idClientArea: AppMessages["clientArea"] = {
         href: "#market",
       },
       {
+        id: "trade-pilot",
+        label: "Trade Pilot",
+        href: "/client-area/trade-pilot/analisis",
+      },
+      {
         id: "transaction",
         label: "Transaksi",
         href: "#actions",
@@ -110,6 +114,243 @@ export const idClientArea: AppMessages["clientArea"] = {
         href: "#account",
       },
     ],
+  },
+  livePriceTicker: {
+    label: "Harga Live",
+  },
+  tradePilotPage: {
+    navigation: {
+      label: "Navigasi Trade Pilot",
+      items: {
+        analysis: "Analisis",
+        performanceHistory: "Riwayat Performa",
+        guide: "Panduan",
+      },
+    },
+    analysis: {
+      title: "Analisis Pasar",
+      description:
+        "Analisis pergerakan harga real-time dengan chart interaktif dan data terkini.",
+      quotaValue: "10/30 Hari",
+      quotaLabel: "Kuota Analisis",
+      sessionValue: "Sydney - Tokyo",
+      sessionLabel: "Sesi Aktif",
+      instrumentPickerTitle: "Pilih Instrumen",
+      searchPlaceholder: "Cari instrumen...",
+      favoritesLabel: "Favorit",
+      addFavoriteLabel: "Tambah instrumen favorit",
+      setAlertLabel: "Pasang Alert",
+      analysisActionLabel: "Analisis",
+      instrumentLabel: "Instrumen:",
+      currentPriceLabel: "Harga saat ini:",
+      timeframeLabel: "Timeframe:",
+      indicatorLabel: "Indikator",
+      chartSettingsLabel: "Pengaturan chart",
+      fullscreenLabel: "Tampilkan layar penuh",
+      exitFullscreenLabel: "Keluar dari layar penuh",
+      screenshotLabel: "Ambil tangkapan chart",
+      captureInProgressLabel: "Sedang mengambil tangkapan chart",
+      captureUnsupportedMessage:
+        "Browser ini tidak mendukung pengambilan tangkapan chart.",
+      captureFailedMessage:
+        "Tangkapan chart gagal dibuat. Pilih tab Client Area saat browser meminta sumber layar.",
+      fullscreenUnsupportedMessage:
+        "Mode layar penuh tidak didukung oleh browser ini.",
+      instrumentNames: {
+        gold: "Emas / Dollar A.S.",
+        brent: "Minyak Mentah Brent",
+        hangSeng: "Indeks Hang Seng",
+        nikkei: "Indeks Nikkei 225",
+      },
+      analysisResult: {
+        relevanceLabel: "Relevan hingga sekitar 4 jam lagi",
+        pendingLabel: "Pending",
+        sessionWindowLabel: "Tokyo • London",
+        highestLiquidityLabel: "likuiditas tertinggi",
+        bullishLabel: "Bullish",
+        bearishLabel: "Bearish",
+        sidewaysLabel: "Sideways",
+        changeTimeframeTitle: "Ganti Timeframe",
+        changeTimeframeDescription:
+          "Instrumen sama, timeframe berbeda — pilih salah satu untuk langsung dianalisis.",
+        compareRiskLabel: "Bandingkan Risiko",
+        directionBiasTitle: "Bias Arah",
+        neutralWaitLabel: "Netral / Tunggu",
+        timeframeContextLabel: "Untuk timeframe",
+        bearishBiasLabel: "Bias bearish kuat",
+        neutralBiasLabel: "Netral / Tunggu",
+        bullishBiasLabel: "Bias bullish kuat",
+        tendencyDisclaimer:
+          "Kecenderungan dari analisis — bukan instruksi beli/jual",
+        confidenceLabel: "Keyakinan",
+        overallRiskLabel: "Risiko Keseluruhan",
+        mediumRiskLabel: "Risiko Sedang",
+        learnLabel: "Pelajari",
+        confidenceReasonTitle: "Kenapa Keyakinan Tidak Lebih Tinggi?",
+        confidenceReasonDescription:
+          "Pergerakan harga dan perubahan sesi pasar dapat menambah volatilitas, sehingga keyakinan skenario teknikal tetap dibatasi.",
+        fullReasonLabel: "Lihat Alasan Lengkap",
+        analyzedAtLabel: "Dianalisis",
+        refreshAnalysisLabel: "Perbarui Analisis",
+        priceChartTitle: "Grafik Harga",
+        updatedAtLabel: "Diperbarui",
+        viewFullChartLabel: "Lihat chart lengkap",
+        resetLabel: "Reset",
+        shareChartLabel: "Bagikan grafik",
+        suggestedLevelsTitle: "Saran Level",
+        recommendedSideLabel: "Sisi yang disarankan",
+        waitLabel: "Tunggu",
+        suggestedLevelsDescription:
+          "Level Entry, Stop Loss, dan Take Profit untuk skenario Buy dan Sell berdasarkan rentang harga saat analisis dibuat.",
+        buyScenarioLabel: "Skenario Buy",
+        sellScenarioLabel: "Skenario Sell",
+        entryLabel: "Entry",
+        aboveLabel: "di atas",
+        belowLabel: "di bawah",
+        breakoutHint: "setelah breakout harga tertinggi",
+        breakdownHint: "setelah breakdown harga terendah",
+        stopLossLabel: "Stop Loss",
+        takeProfitOneLabel: "Take Profit 1",
+        takeProfitTwoLabel: "Take Profit 2",
+        riskRewardLabel: "Risk : Reward",
+        reasonLabel: "Alasan",
+        buyReason:
+          "Konfirmasi breakout di atas resistance dan kelanjutan momentum harga.",
+        sellReason:
+          "Konfirmasi breakdown di bawah support dan kelanjutan tekanan harga.",
+        copyLevelsLabel: "Salin level",
+        copiedLabel: "Level tersalin",
+      },
+      fundamentalContext: {
+        title: "Konteks Fundamental",
+        description: "Berita & event terkait analisis ini.",
+        refreshLabel: "Refresh fundamental",
+        latestNewsLabel: "Berita Terkini",
+        economicCalendarLabel: "Kalender Ekonomi",
+        learnLabel: "Pelajari",
+        items: [
+          {
+            title:
+              "US Bond Yields Keep Climbing — But Retail Traders Still Can't Get Enough Stocks",
+            source: "Yahoo Finance",
+            publishedAt: "sekitar 1 jam yang lalu",
+          },
+          {
+            title:
+              "Emas Masih Dalam Mode Tertekan, Dolar dan Yield AS Jadi Beban Utama",
+            source: "Newsmaker.id",
+            publishedAt: "sekitar 4 jam yang lalu",
+          },
+          {
+            title:
+              "Menteri Keuangan Jepang Dukung Kenaikan Bunga BoJ, Fokus Capai Target Inflasi",
+            source: "Newsmaker.id",
+            publishedAt: "sekitar 4 jam yang lalu",
+          },
+          {
+            title:
+              "Pasar Menanti Data Ekonomi AS di Tengah Penguatan Imbal Hasil Obligasi",
+            source: "Newsmaker.id",
+            publishedAt: "sekitar 5 jam yang lalu",
+          },
+          {
+            title:
+              "Harga Emas Bergerak Sideways Menjelang Pembukaan Sesi London",
+            source: "Newsmaker.id",
+            publishedAt: "sekitar 6 jam yang lalu",
+          },
+        ],
+      },
+      marketContextSummary: {
+        eyebrow: "Ringkasan Konteks Pasar",
+        bearishTitle: "Cenderung Bearish",
+        bullishTitle: "Cenderung Bullish",
+        sellLabel: "Jual",
+        buyLabel: "Beli",
+        bearishDescription:
+          "7 dari 11 indikator cenderung bearish, sementara 3 bullish dan 1 netral.",
+        bullishDescription:
+          "7 dari 11 indikator cenderung bullish, sementara 3 bearish dan 1 netral.",
+        bearishNote:
+          "Data saat ini condong ke skenario penurunan — konfirmasi dengan price action sebelum mengambil keputusan.",
+        bullishNote:
+          "Data saat ini condong ke skenario kenaikan — konfirmasi dengan price action sebelum mengambil keputusan.",
+      },
+      tradingPlan: {
+        title: "Trading Plan Adaptif",
+        description: "Simulasi entry, lot, dan risiko dari analisis ini.",
+        accountTypeLabel: "Tipe Akun",
+        microAccountLabel: "Micro",
+        miniAccountLabel: "Mini",
+        regularAccountLabel: "Regular",
+        tradingCapitalLabel: "Modal trading",
+        lossLimitLabel: "Batas rugi",
+        riskStyleLabel: "Gaya Risiko",
+        conservativeLabel: "Conservative",
+        moderateLabel: "Moderat",
+        aggressiveLabel: "Aggressive",
+        intradayNote:
+          "Perhitungan ini khusus untuk posisi intraday (day trade); posisi overnight tidak tercakup.",
+        snapshotLabel: "Snapshot candle analisis diambil",
+        snapshotValue: "2/10/2026, 09:10:15",
+        createRecommendationLabel: "Buat Rekomendasi",
+        waitStatusLabel: "Tunggu",
+        limitedOptionsLabel: "Hanya opsi terbatas",
+        waitDescription:
+          "Risiko lot minimum melewati target gaya, meski masih di bawah batas rugi. Jangan entry.",
+        waitGuidance:
+          "Tunggu setup lain dengan risiko lot minimum maksimal $225; jangan geser stop.",
+        minimumStopRiskLabel: "Risiko minimum di stop",
+        warningTitle: "Belum ada rencana yang aman",
+        warningDescription:
+          "Belum ada sisi yang memiliki plan aman dan disetujui. Periksa status dan angka lot minimum tiap sisi di bawah; angka diagnostik bukan plan entry yang valid. Ubah input finansial hanya jika terjangkau dan dapat diterima secara mandiri, atau tunggu/skip.",
+        buyScenarioLabel: "Skenario Naik (Buy)",
+        sellScenarioLabel: "Skenario Turun (Sell)",
+        understandDetailsLabel: "Pahami detailnya",
+        cancellationConditionsLabel: "2 kondisi batal",
+      },
+    },
+    performanceHistory: {
+      title: "Riwayat Performa",
+      description:
+        "Pantau rangkuman hasil dan perkembangan performa analisis Trade Pilot.",
+      totalSummary: "58 analisis total",
+      summaryTabLabel: "Ringkasan",
+      historyTabLabel: "Riwayat",
+      allPeriodLabel: "Semua",
+      stats: {
+        totalAnalysis: "Total analisis",
+        stillValid: "Masih valid",
+        expired: "Expired",
+        stopLoss: "Stop Loss",
+        takeProfitOne: "Take Profit 1",
+        takeProfitTwo: "Take Profit 2",
+        invalid: "Invalid",
+      },
+      consistentTimeframeLabel: "Timeframe paling konsisten",
+      mostExpiredLabel: "Paling sering expired",
+      mostStopLossLabel: "Paling sering kena SL",
+      instrumentPerformanceTitle: "Performa per instrumen",
+      instrumentPerformanceDescription:
+        "Pilih instrumen untuk memfokuskan performa timeframe.",
+      sampleLabel: "sampel",
+      winRateLabel: "Win",
+      viewHistoryLabel: "Lihat riwayat",
+      timeframePerformanceTitle: "Performa per timeframe",
+      timeframePerformanceDescription:
+        "Win rate membandingkan TP dengan TP + SL. Setup expired hanya masuk ke completion rate.",
+      timeframeColumnLabel: "Timeframe",
+      sampleColumnLabel: "Sampel",
+      validColumnLabel: "Masih valid",
+      expiredColumnLabel: "Expired",
+      winRateColumnLabel: "Win rate",
+      completionColumnLabel: "Completion",
+    },
+    guide: {
+      title: "Panduan Trade Pilot",
+      description:
+        "Pelajari cara membaca analisis dan menggunakan fitur Trade Pilot secara efektif.",
+    },
   },
   topbar: {
     supportLabel: "Download Aplikasi MIFX",
@@ -323,8 +564,7 @@ export const idClientArea: AppMessages["clientArea"] = {
     accountCenter: {
       statusLabel: "Status akun",
       servicesTitle: "Layanan akun",
-      servicesDescription:
-        "Pilih layanan yang ingin Anda lihat atau kelola.",
+      servicesDescription: "Pilih layanan yang ingin Anda lihat atau kelola.",
     },
     menuDescriptions: {
       profile: "Lihat identitas, kontak, pekerjaan, dan profil keuangan.",
@@ -480,7 +720,8 @@ export const idClientArea: AppMessages["clientArea"] = {
   },
   dailyStatementPage: {
     title: "Daily Statement",
-    description: "Ringkasan posisi dan mutasi harian rekening perdagangan Anda.",
+    description:
+      "Ringkasan posisi dan mutasi harian rekening perdagangan Anda.",
     downloadLabel: "Unduh Daily Statement",
     preparingLabel: "Menyiapkan PDF",
     tabs: {
@@ -512,12 +753,44 @@ export const idClientArea: AppMessages["clientArea"] = {
       closePrice: "Close Price",
     },
     openPositions: [
-      { id: "open-xul10", symbol: "XUL10", side: "BUY", volume: "1.00 lot", openPrice: "$ 2,615.40", marketPrice: "$ 2,619.90", floatingPl: "+$ 450.00" },
-      { id: "open-eu1010", symbol: "EU1010", side: "BUY", volume: "0.50 lot", openPrice: "$ 1.08320", marketPrice: "$ 1.08410", floatingPl: "+$ 45.00" },
+      {
+        id: "open-xul10",
+        symbol: "XUL10",
+        side: "BUY",
+        volume: "1.00 lot",
+        openPrice: "$ 2,615.40",
+        marketPrice: "$ 2,619.90",
+        floatingPl: "+$ 450.00",
+      },
+      {
+        id: "open-eu1010",
+        symbol: "EU1010",
+        side: "BUY",
+        volume: "0.50 lot",
+        openPrice: "$ 1.08320",
+        marketPrice: "$ 1.08410",
+        floatingPl: "+$ 45.00",
+      },
     ],
     settledPositions: [
-      { id: "settled-xul10", symbol: "XUL10", side: "BUY", volume: "2.00 lot", openPrice: "$ 2,594.20", closePrice: "$ 2,613.75", profitLoss: "+$ 3,910.00" },
-      { id: "settled-hkk50", symbol: "HKK50_BBJ", side: "SELL", volume: "1.00 lot", openPrice: "$ 19,844.00", closePrice: "$ 19,812.00", profitLoss: "+$ 320.00" },
+      {
+        id: "settled-xul10",
+        symbol: "XUL10",
+        side: "BUY",
+        volume: "2.00 lot",
+        openPrice: "$ 2,594.20",
+        closePrice: "$ 2,613.75",
+        profitLoss: "+$ 3,910.00",
+      },
+      {
+        id: "settled-hkk50",
+        symbol: "HKK50_BBJ",
+        side: "SELL",
+        volume: "1.00 lot",
+        openPrice: "$ 19,844.00",
+        closePrice: "$ 19,812.00",
+        profitLoss: "+$ 320.00",
+      },
     ],
   },
   referralPage: {

@@ -66,7 +66,8 @@ export const enClientArea: AppMessages["clientArea"] = {
     errorRequired: "Enter your OTP code.",
     errorInvalidCode:
       "The OTP code is incorrect or has expired. Please try again.",
-    errorSessionExpired: "The verification session has expired. Please sign in again.",
+    errorSessionExpired:
+      "The verification session has expired. Please sign in again.",
   },
   user: {
     name: "Anita",
@@ -90,6 +91,11 @@ export const enClientArea: AppMessages["clientArea"] = {
         href: "#market",
       },
       {
+        id: "trade-pilot",
+        label: "Trade Pilot",
+        href: "/client-area/trade-pilot/analisis",
+      },
+      {
         id: "transaction",
         label: "Transaction",
         href: "#actions",
@@ -110,6 +116,241 @@ export const enClientArea: AppMessages["clientArea"] = {
         href: "#account",
       },
     ],
+  },
+  livePriceTicker: {
+    label: "Live Prices",
+  },
+  tradePilotPage: {
+    navigation: {
+      label: "Trade Pilot navigation",
+      items: {
+        analysis: "Analysis",
+        performanceHistory: "Performance History",
+        guide: "Guide",
+      },
+    },
+    analysis: {
+      title: "Market Analysis",
+      description:
+        "Analyze real-time price movements with interactive charts and current market data.",
+      quotaValue: "10/30 Days",
+      quotaLabel: "Analysis Quota",
+      sessionValue: "Sydney - Tokyo",
+      sessionLabel: "Active Session",
+      instrumentPickerTitle: "Select Instrument",
+      searchPlaceholder: "Search instruments...",
+      favoritesLabel: "Favorites",
+      addFavoriteLabel: "Add favorite instrument",
+      setAlertLabel: "Set Alert",
+      analysisActionLabel: "Analyze",
+      instrumentLabel: "Instrument:",
+      currentPriceLabel: "Current price:",
+      timeframeLabel: "Timeframe:",
+      indicatorLabel: "Indicator",
+      chartSettingsLabel: "Chart settings",
+      fullscreenLabel: "Show fullscreen",
+      exitFullscreenLabel: "Exit fullscreen",
+      screenshotLabel: "Capture chart",
+      captureInProgressLabel: "Capturing chart",
+      captureUnsupportedMessage: "This browser does not support chart capture.",
+      captureFailedMessage:
+        "The chart could not be captured. Select the Client Area tab when the browser asks for a screen source.",
+      fullscreenUnsupportedMessage:
+        "Fullscreen mode is not supported by this browser.",
+      instrumentNames: {
+        gold: "Gold / U.S. Dollar",
+        brent: "Brent Crude Oil",
+        hangSeng: "Hang Seng Index",
+        nikkei: "Nikkei 225 Index",
+      },
+      analysisResult: {
+        relevanceLabel: "Relevant for approximately 4 more hours",
+        pendingLabel: "Pending",
+        sessionWindowLabel: "Tokyo • London",
+        highestLiquidityLabel: "highest liquidity",
+        bullishLabel: "Bullish",
+        bearishLabel: "Bearish",
+        sidewaysLabel: "Sideways",
+        changeTimeframeTitle: "Change Timeframe",
+        changeTimeframeDescription:
+          "Same instrument, different timeframe — select one to analyze it immediately.",
+        compareRiskLabel: "Compare Risk",
+        directionBiasTitle: "Direction Bias",
+        neutralWaitLabel: "Neutral / Wait",
+        timeframeContextLabel: "For timeframe",
+        bearishBiasLabel: "Strong bearish bias",
+        neutralBiasLabel: "Neutral / Wait",
+        bullishBiasLabel: "Strong bullish bias",
+        tendencyDisclaimer:
+          "Analytical tendency — not an instruction to buy or sell",
+        confidenceLabel: "Confidence",
+        overallRiskLabel: "Overall Risk",
+        mediumRiskLabel: "Medium Risk",
+        learnLabel: "Learn",
+        confidenceReasonTitle: "Why Isn't Confidence Higher?",
+        confidenceReasonDescription:
+          "Price movement and changing market sessions can add volatility, so confidence in the technical scenario remains limited.",
+        fullReasonLabel: "View Full Reason",
+        analyzedAtLabel: "Analyzed",
+        refreshAnalysisLabel: "Refresh Analysis",
+        priceChartTitle: "Price Chart",
+        updatedAtLabel: "Updated",
+        viewFullChartLabel: "View full chart",
+        resetLabel: "Reset",
+        shareChartLabel: "Share chart",
+        suggestedLevelsTitle: "Suggested Levels",
+        recommendedSideLabel: "Recommended side",
+        waitLabel: "Wait",
+        suggestedLevelsDescription:
+          "Entry, Stop Loss, and Take Profit levels for Buy and Sell scenarios based on the price range when the analysis was created.",
+        buyScenarioLabel: "Buy Scenario",
+        sellScenarioLabel: "Sell Scenario",
+        entryLabel: "Entry",
+        aboveLabel: "above",
+        belowLabel: "below",
+        breakoutHint: "after a breakout of the session high",
+        breakdownHint: "after a breakdown of the session low",
+        stopLossLabel: "Stop Loss",
+        takeProfitOneLabel: "Take Profit 1",
+        takeProfitTwoLabel: "Take Profit 2",
+        riskRewardLabel: "Risk : Reward",
+        reasonLabel: "Reason",
+        buyReason:
+          "Breakout confirmation above resistance with continued price momentum.",
+        sellReason:
+          "Breakdown confirmation below support with continued selling pressure.",
+        copyLevelsLabel: "Copy levels",
+        copiedLabel: "Levels copied",
+      },
+      fundamentalContext: {
+        title: "Fundamental Context",
+        description: "News and events related to this analysis.",
+        refreshLabel: "Refresh fundamentals",
+        latestNewsLabel: "Latest News",
+        economicCalendarLabel: "Economic Calendar",
+        learnLabel: "Learn",
+        items: [
+          {
+            title:
+              "US Bond Yields Keep Climbing — But Retail Traders Still Can't Get Enough Stocks",
+            source: "Yahoo Finance",
+            publishedAt: "about 1 hour ago",
+          },
+          {
+            title:
+              "Gold Remains Under Pressure as the Dollar and US Yields Weigh on Prices",
+            source: "Newsmaker.id",
+            publishedAt: "about 4 hours ago",
+          },
+          {
+            title:
+              "Japan's Finance Minister Supports BoJ Rate Hikes and Inflation Target",
+            source: "Newsmaker.id",
+            publishedAt: "about 4 hours ago",
+          },
+          {
+            title: "Markets Await US Economic Data Amid Rising Bond Yields",
+            source: "Newsmaker.id",
+            publishedAt: "about 5 hours ago",
+          },
+          {
+            title: "Gold Trades Sideways Ahead of the London Session Open",
+            source: "Newsmaker.id",
+            publishedAt: "about 6 hours ago",
+          },
+        ],
+      },
+      marketContextSummary: {
+        eyebrow: "Market Context Summary",
+        bearishTitle: "Leaning Bearish",
+        bullishTitle: "Leaning Bullish",
+        sellLabel: "Sell",
+        buyLabel: "Buy",
+        bearishDescription:
+          "7 of 11 indicators are leaning bearish, while 3 are bullish and 1 is neutral.",
+        bullishDescription:
+          "7 of 11 indicators are leaning bullish, while 3 are bearish and 1 is neutral.",
+        bearishNote:
+          "Current data favors a downside scenario — confirm with price action before making a decision.",
+        bullishNote:
+          "Current data favors an upside scenario — confirm with price action before making a decision.",
+      },
+      tradingPlan: {
+        title: "Adaptive Trading Plan",
+        description:
+          "Entry, lot size, and risk simulation based on this analysis.",
+        accountTypeLabel: "Account Type",
+        microAccountLabel: "Micro",
+        miniAccountLabel: "Mini",
+        regularAccountLabel: "Regular",
+        tradingCapitalLabel: "Trading capital",
+        lossLimitLabel: "Loss limit",
+        riskStyleLabel: "Risk Style",
+        conservativeLabel: "Conservative",
+        moderateLabel: "Moderate",
+        aggressiveLabel: "Aggressive",
+        intradayNote:
+          "This calculation only covers intraday positions (day trades); overnight positions are not included.",
+        snapshotLabel: "Analysis candle snapshot captured",
+        snapshotValue: "2/10/2026, 09:10:15",
+        createRecommendationLabel: "Create Recommendation",
+        waitStatusLabel: "Wait",
+        limitedOptionsLabel: "Limited options only",
+        waitDescription:
+          "The minimum lot risk exceeds the selected risk target, although it remains below the loss limit. Do not enter.",
+        waitGuidance:
+          "Wait for another setup with a maximum minimum-lot risk of $225; do not move the stop.",
+        minimumStopRiskLabel: "Minimum risk at stop",
+        warningTitle: "No safe plan is available yet",
+        warningDescription:
+          "Neither side currently has an approved safe plan. Review the status and minimum lot figures for each side below; diagnostic figures are not a valid entry plan. Only adjust financial inputs when independently affordable and acceptable, or wait and skip the setup.",
+        buyScenarioLabel: "Upside Scenario (Buy)",
+        sellScenarioLabel: "Downside Scenario (Sell)",
+        understandDetailsLabel: "Understand the details",
+        cancellationConditionsLabel: "2 cancellation conditions",
+      },
+    },
+    performanceHistory: {
+      title: "Performance History",
+      description:
+        "Review Trade Pilot analysis results and performance development over time.",
+      totalSummary: "58 total analyses",
+      summaryTabLabel: "Summary",
+      historyTabLabel: "History",
+      allPeriodLabel: "All",
+      stats: {
+        totalAnalysis: "Total analyses",
+        stillValid: "Still valid",
+        expired: "Expired",
+        stopLoss: "Stop Loss",
+        takeProfitOne: "Take Profit 1",
+        takeProfitTwo: "Take Profit 2",
+        invalid: "Invalid",
+      },
+      consistentTimeframeLabel: "Most consistent timeframe",
+      mostExpiredLabel: "Most frequently expired",
+      mostStopLossLabel: "Most frequently hit SL",
+      instrumentPerformanceTitle: "Performance by instrument",
+      instrumentPerformanceDescription:
+        "Select an instrument to focus its timeframe performance.",
+      sampleLabel: "samples",
+      winRateLabel: "Win",
+      viewHistoryLabel: "View history",
+      timeframePerformanceTitle: "Performance by timeframe",
+      timeframePerformanceDescription:
+        "Win rate compares TP against TP + SL. Expired setups only count toward the completion rate.",
+      timeframeColumnLabel: "Timeframe",
+      sampleColumnLabel: "Samples",
+      validColumnLabel: "Still valid",
+      expiredColumnLabel: "Expired",
+      winRateColumnLabel: "Win rate",
+      completionColumnLabel: "Completion",
+    },
+    guide: {
+      title: "Trade Pilot Guide",
+      description:
+        "Learn how to read the analysis and use Trade Pilot features effectively.",
+    },
   },
   topbar: {
     supportLabel: "Download MIFX App",
@@ -326,7 +567,8 @@ export const enClientArea: AppMessages["clientArea"] = {
       servicesDescription: "Choose the service you want to view or manage.",
     },
     menuDescriptions: {
-      profile: "View your identity, contact, employment, and financial profile.",
+      profile:
+        "View your identity, contact, employment, and financial profile.",
       referral: "The Referral Code feature is temporarily disabled.",
       dailyStatement: "View account activity summaries and daily statements.",
       withdrawal: "Open the fund withdrawal request service.",
@@ -479,7 +721,8 @@ export const enClientArea: AppMessages["clientArea"] = {
   },
   dailyStatementPage: {
     title: "Daily Statement",
-    description: "A daily summary of your trading account positions and balance movements.",
+    description:
+      "A daily summary of your trading account positions and balance movements.",
     downloadLabel: "Download Daily Statement",
     preparingLabel: "Preparing PDF",
     tabs: {
@@ -511,12 +754,44 @@ export const enClientArea: AppMessages["clientArea"] = {
       closePrice: "Close Price",
     },
     openPositions: [
-      { id: "open-xul10", symbol: "XUL10", side: "BUY", volume: "1.00 lot", openPrice: "$ 2,615.40", marketPrice: "$ 2,619.90", floatingPl: "+$ 450.00" },
-      { id: "open-eu1010", symbol: "EU1010", side: "BUY", volume: "0.50 lot", openPrice: "$ 1.08320", marketPrice: "$ 1.08410", floatingPl: "+$ 45.00" },
+      {
+        id: "open-xul10",
+        symbol: "XUL10",
+        side: "BUY",
+        volume: "1.00 lot",
+        openPrice: "$ 2,615.40",
+        marketPrice: "$ 2,619.90",
+        floatingPl: "+$ 450.00",
+      },
+      {
+        id: "open-eu1010",
+        symbol: "EU1010",
+        side: "BUY",
+        volume: "0.50 lot",
+        openPrice: "$ 1.08320",
+        marketPrice: "$ 1.08410",
+        floatingPl: "+$ 45.00",
+      },
     ],
     settledPositions: [
-      { id: "settled-xul10", symbol: "XUL10", side: "BUY", volume: "2.00 lot", openPrice: "$ 2,594.20", closePrice: "$ 2,613.75", profitLoss: "+$ 3,910.00" },
-      { id: "settled-hkk50", symbol: "HKK50_BBJ", side: "SELL", volume: "1.00 lot", openPrice: "$ 19,844.00", closePrice: "$ 19,812.00", profitLoss: "+$ 320.00" },
+      {
+        id: "settled-xul10",
+        symbol: "XUL10",
+        side: "BUY",
+        volume: "2.00 lot",
+        openPrice: "$ 2,594.20",
+        closePrice: "$ 2,613.75",
+        profitLoss: "+$ 3,910.00",
+      },
+      {
+        id: "settled-hkk50",
+        symbol: "HKK50_BBJ",
+        side: "SELL",
+        volume: "1.00 lot",
+        openPrice: "$ 19,844.00",
+        closePrice: "$ 19,812.00",
+        profitLoss: "+$ 320.00",
+      },
     ],
   },
   referralPage: {

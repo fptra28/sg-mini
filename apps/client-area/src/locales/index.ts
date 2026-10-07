@@ -34,6 +34,12 @@ export {
   type GettingStartedPageContent,
 } from "./getting-started-page";
 export { getTradingRulesPageContent, type TradingRulesPageContent } from "./trading-rules-page";
+export {
+  getTradePilotGuidePageContent,
+  type TradePilotGuideArticle,
+  type TradePilotGuideCategoryId,
+  type TradePilotGuidePageContent,
+} from "./trade-pilot-guide-page";
 
 import { DEFAULT_LOCALE, type AppLocale } from "./config";
 import { messages } from "./messages";

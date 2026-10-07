@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import type { ReactNode } from "react";
 import { memo, useEffect, useRef } from "react";
 
-import { getMessages, type AppLocale } from "@/locales";
+import type { AppLocale } from "@/locales";
 
 const TRADING_VIEW_SCRIPT_URL =
     "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
@@ -15,15 +14,26 @@ export type TradingViewPreset = {
     symbol: string;
 };
 
-type TradingViewInterval = "15" | "60" | "240" | "D";
+export type TradingViewInterval =
+    | "1"
+    | "5"
+    | "15"
+    | "60"
+    | "240"
+    | "D"
+    | "W"
+    | "M";
 
 type TradingViewProps = {
     activePresetId?: string;
+    chartHeightClassName?: string;
     className?: string;
     defaultInterval?: TradingViewInterval;
     defaultPresetId?: string;
     embedded?: boolean;
     headerAction?: ReactNode;
+    hideSideToolbar?: boolean;
+    hideTopToolbar?: boolean;
     locale: AppLocale;
     marketDetails?: ReactNode;
     presets?: TradingViewPreset[];
@@ -42,18 +52,20 @@ const DEFAULT_PRESETS: TradingViewPreset[] = [
 function createTradingViewConfig(
     symbol: string,
     interval: TradingViewInterval,
+    hideSideToolbar: boolean,
+    hideTopToolbar: boolean,
 ) {
     return {
-        allow_symbol_change: true,
+        allow_symbol_change: !hideTopToolbar,
         autosize: true,
         backgroundColor: "#0F0F0F",
         calendar: false,
         compareSymbols: [],
-        details: true,
+        details: !hideTopToolbar,
         gridColor: "rgba(242, 242, 242, 0.2)",
         hide_legend: false,
-        hide_side_toolbar: false,
-        hide_top_toolbar: false,
+        hide_side_toolbar: hideSideToolbar,
+        hide_top_toolbar: hideTopToolbar,
         hide_volume: false,
         hotlist: false,
         interval,
@@ -69,18 +81,16 @@ function createTradingViewConfig(
     } as const;
 }
 
-function getTradingViewSymbolUrl(symbol: string) {
-    return `https://www.tradingview.com/symbols/${symbol.replace(":", "-")}/`;
-}
-
 function TradingView({
     activePresetId,
+    chartHeightClassName = "h-[340px] sm:h-[460px] lg:h-[600px]",
     className = "",
     defaultInterval = "60",
     defaultPresetId,
     embedded = false,
     headerAction,
-    locale,
+    hideSideToolbar = false,
+    hideTopToolbar = false,
     marketDetails,
     presets = DEFAULT_PRESETS,
 }: TradingViewProps) {
@@ -95,43 +105,35 @@ function TradingView({
         resolvedPresets.find((preset) => preset.id === resolvedPresetId) ??
         fallbackPreset;
 
-    const symbolUrl = getTradingViewSymbolUrl(activePreset.symbol);
-    const chartLabel = `${activePreset.label} chart`;
-    const tradingViewCopy = getMessages(locale).clientArea.tradingView;
-
     useEffect(() => {
         const container = containerRef.current;
 
         if (!container) return;
 
-        const widget = container.querySelector<HTMLDivElement>(
-            ".tradingview-widget-container__widget",
-        );
-
-        if (widget) {
-            widget.innerHTML = "";
-        }
-
-        container.querySelectorAll("script").forEach((script) => script.remove());
+        const widget = document.createElement("div");
+        widget.className =
+            "tradingview-widget-container__widget h-full w-full";
+        container.replaceChildren(widget);
 
         const script = document.createElement("script");
         script.src = TRADING_VIEW_SCRIPT_URL;
         script.type = "text/javascript";
         script.async = true;
-        script.text = JSON.stringify(
-            createTradingViewConfig(activePreset.symbol, defaultInterval),
+        script.textContent = JSON.stringify(
+            createTradingViewConfig(
+                activePreset.symbol,
+                defaultInterval,
+                hideSideToolbar,
+                hideTopToolbar,
+            ),
         );
 
         container.appendChild(script);
 
         return () => {
-            container.querySelectorAll("script").forEach((script) => script.remove());
-
-            if (widget) {
-                widget.innerHTML = "";
-            }
+            container.replaceChildren();
         };
-    }, [activePreset.symbol, defaultInterval]);
+    }, [activePreset.symbol, defaultInterval, hideSideToolbar, hideTopToolbar]);
 
     return (
         <div className="space-y-5">
@@ -151,48 +153,17 @@ function TradingView({
                 ) : null}
 
                 <div
-                    className={`h-[340px] w-full overflow-hidden sm:h-[460px] lg:h-[600px] ${embedded
+                    className={`${chartHeightClassName} w-full overflow-hidden ${embedded
                         ? "rounded-2xl border border-zinc-800/80 bg-black/20"
                         : "rounded-xl border border-zinc-800/80 bg-black/20"
                         }`}
                 >
                     <div
                         ref={containerRef}
+                        data-interval={defaultInterval}
+                        data-symbol={activePreset.symbol}
                         className="tradingview-widget-container h-full w-full"
-                    >
-                        <div className="tradingview-widget-container__widget h-[calc(100%-32px)] w-full" />
-                        <div className="tradingview-widget-copyright px-3 py-2 text-xs">
-                            <a
-                                href={symbolUrl}
-                                rel="noopener nofollow"
-                                target="_blank"
-                                className="text-sky-400 transition-colors hover:text-sky-300"
-                            >
-                                {chartLabel}
-                            </a>
-                            <span className="trademark text-zinc-400"> by TradingView</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 backdrop-blur-xs">
-                <div className="flex flex-col gap-3 sm:flex-row">
-                    <div>
-                        <div className="relative h-10 w-[170px] shrink-0">
-                            <Image
-                                src="/assets/TradingView.png"
-                                alt="Logo TradingView"
-                                fill
-                                sizes="240px"
-                                className="object-contain object-left"
-                            />
-                        </div>
-
-                        <p className="text-sm leading-7 text-zinc-300">
-                            {tradingViewCopy.disclaimerTradingView}
-                        </p>
-                    </div>
+                    />
                 </div>
             </div>
         </div>

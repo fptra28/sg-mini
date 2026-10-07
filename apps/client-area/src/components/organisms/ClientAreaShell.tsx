@@ -9,7 +9,6 @@ import type {
   BreakingNewsItem,
   TabId,
 } from "@/components/organisms/client-area.types";
-import { getMessages } from "@/locales";
 import type { AppLocale } from "@/locales";
 
 type ClientAreaShellProps = {
@@ -18,6 +17,7 @@ type ClientAreaShellProps = {
   children: ReactNode;
   locale: AppLocale;
   modal?: ReactNode;
+  showHeaderTicker?: boolean;
 };
 
 export function ClientAreaShell({
@@ -26,8 +26,8 @@ export function ClientAreaShell({
   children,
   locale,
   modal,
+  showHeaderTicker = true,
 }: ClientAreaShellProps) {
-  const messages = useMemo(() => getMessages(locale), [locale]);
   const copy = useMemo(() => getDashboardCopy(locale), [locale]);
   const resolvedBreakingNews = useMemo(
     () =>
@@ -49,10 +49,12 @@ export function ClientAreaShell({
 
       <SectionContainer className="relative">
         <section className="space-y-4 sm:space-y-5">
-          <ClientAreaHeaderTicker
-            breakingLabel={copy.breakingLabel}
-            breakingNews={resolvedBreakingNews}
-          />
+          {showHeaderTicker ? (
+            <ClientAreaHeaderTicker
+              breakingLabel={copy.breakingLabel}
+              breakingNews={resolvedBreakingNews}
+            />
+          ) : null}
 
           <div className="w-full min-w-0">{children}</div>
 
